@@ -7,7 +7,7 @@ authors = [
     {name = "Beatriz-Ferrante",email = "beatriz.ferrante37@gmail.com"},
     {name = "Cecilia-Rocha",email = "ceciliasdrochedo@gmail.com"}
 ]
-requires-python = "3.14"
+requires-python = ">=3.14"
 dependencies = [
     "pandas>=2.0.0",
     "numpy>=1.24.0",
