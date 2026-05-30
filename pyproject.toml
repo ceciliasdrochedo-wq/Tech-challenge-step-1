@@ -1,16 +1,45 @@
 [project]
 name = "tech-challenge"
 version = "0.1.0"
-description = ""
+description = "Projeto de Machine Learning de previsão de churn para o Tech Challenge"
+readme = "README.md"
 authors = [
     {name = "Patrick-Covre",email = "p.covredev@gmail.com"},
     {name = "Beatriz-Ferrante",email = "beatriz.ferrante37@gmail.com"}
 ]
-requires-python = "3.14"
+requires-python = ">=3.8"
 dependencies = [
+    "scikit-learn", "pandas", "fastapi"
 ]
-
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[dependency-groups]
+dev = [
+    "ruff (>=0.15.15,<0.16.0)",
+    "pytest",
+    "mypy",
+    "pre-commit (>=4.6.0,<5.0.0)"
+]
+
+[tool.ruff]
+extend-include = ["*.ipynb"]
+line-length = 88
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "F",   # pyflakes
+    "I",   # isort (ordenação de imports)
+    "B",   # flake8-bugbear (bugs comuns)
+    "UP",  # pyupgrade (modernização de sintaxe)
+    "PD",  # pandas-vet (boas práticas para pandas)
+    "NPY",
+]
+ignore = []
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
