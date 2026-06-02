@@ -2,3 +2,6 @@
 mlruns/
 mlartifacts/
 mlruns.db
+
+ # Modelos PyTorch locais
+*.pth

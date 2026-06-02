@@ -1,0 +1,12 @@
+{
+  "servers": {
+    "perplexity": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@perplexity-ai/mcp-server"],
+      "env": {
+        "PERPLEXITY_API_KEY": "SUA_CHAVE_AQUI"
+      }
+    }
+  }
+}
