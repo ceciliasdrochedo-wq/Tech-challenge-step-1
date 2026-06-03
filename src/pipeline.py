@@ -1,9 +1,11 @@
+from __future__ import annotations
+
 import logging
 
-from src.config import DataConfig, MLPConfig, MLflowConfig
+from src.config import DataConfig, MLflowConfig, MLPConfig
 from src.data.loader import ChurnDataLoader
 from src.models.mlp_trainer import PyTorchMLPTrainer
-from src.models.registry import MODEL_REGISTRY
+from src.models.registry import MODEL_REGISTRY, PYTORCH_REGISTRY
 from src.models.trainer import SklearnTrainer
 from src.service.mlflow_service import MLflowService
 
@@ -78,6 +80,7 @@ class ChurnPipeline:
             model, metrics = self.sklearn_trainer.fit_evaluate(
                 entry["model"], X_train, y_train, X_test, y_test
             )
+            mlflow_meta = entry.get("mlflow", {})
             self.mlflow.log_sklearn_run(
                 run_name=name,
                 model=model,
@@ -85,6 +88,8 @@ class ChurnPipeline:
                 params=entry["params"],
                 dataset_info=dataset_info,
                 tags={"stage": "etapa2", "model_family": "sklearn"},
+                register=bool(mlflow_meta),
+                **mlflow_meta,
             )
             results[name] = metrics
 
@@ -100,6 +105,7 @@ class ChurnPipeline:
             model_pt, metrics_pt, train_losses = self.pytorch_trainer.fit_evaluate(
                 X_train, y_train, X_test, y_test, epoch_callback=_epoch_cb
             )
+            pytorch_meta = PYTORCH_REGISTRY.get("MLP_PyTorch", {}).get("mlflow", {})
             self.mlflow.log_pytorch_run(
                 run_name="MLP_PyTorch",
                 model=model_pt,
@@ -108,6 +114,8 @@ class ChurnPipeline:
                 train_losses=train_losses,
                 dataset_info=dataset_info,
                 tags={"stage": "etapa2", "model_family": "pytorch"},
+                register=bool(pytorch_meta),
+                **pytorch_meta,
             )
             results["mlp_pytorch"] = metrics_pt
 

@@ -56,7 +56,10 @@ select = [
     "PD",  # pandas-vet
     "NPY",
 ]
-ignore = ["E501"]
+ignore = ["E501", "NPY002", "PD003"]
+
+[tool.ruff.lint.per-file-ignores]
+"*.ipynb" = ["E402", "I001", "E401", "B008", "F401", "B905", "PD011", "PD002", "F541"]
 
 [tool.ruff.format]
 quote-style = "double"

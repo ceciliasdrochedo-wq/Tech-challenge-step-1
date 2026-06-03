@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import hashlib
 import logging
 from pathlib import Path
@@ -44,12 +46,12 @@ class ChurnDataLoader:
             df["TotalCharges"] = pd.to_numeric(df["TotalCharges"], errors="coerce")
 
         before = len(df)
-        df.dropna(inplace=True)
+        df = df.dropna()
         dropped = before - len(df)
         if dropped:
             logger.info("Dropped %d rows with nulls", dropped)
 
-        df.drop(columns=["customerID"], inplace=True, errors="ignore")
+        df = df.drop(columns=["customerID"], errors="ignore")
 
         # Encode binary target (Yes/No → 1/0)
         if df[self.target].dtype == object:
@@ -70,7 +72,7 @@ class ChurnDataLoader:
         num_cols = [c for c in df.columns if c != self.target and c not in cat_cols]
 
         X = df.drop(columns=[self.target])
-        y = df[self.target].values
+        y = df[self.target].to_numpy()
 
         X_train, X_test, y_train, y_test = train_test_split(
             X,

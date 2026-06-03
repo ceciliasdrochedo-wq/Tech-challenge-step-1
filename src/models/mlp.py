@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import torch
 import torch.nn as nn
 
@@ -28,7 +30,7 @@ class ChurnMLP(nn.Module):
 
         layers: list[nn.Module] = []
         in_dim = input_dim
-        for out_dim, drop in zip(hidden_sizes, dropout_rates):
+        for out_dim, drop in zip(hidden_sizes, dropout_rates, strict=True):
             layers.append(nn.Linear(in_dim, out_dim))
             if drop > 0:
                 layers.append(nn.BatchNorm1d(out_dim))
