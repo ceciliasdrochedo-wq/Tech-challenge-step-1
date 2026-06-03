@@ -4,6 +4,7 @@ from typing import Any
 import mlflow
 import mlflow.pytorch
 import mlflow.sklearn
+from mlflow.tracking import MlflowClient
 
 logger = logging.getLogger(__name__)
 
@@ -38,12 +39,20 @@ class MLflowService:
         params: dict[str, Any] | None = None,
         dataset_info: dict[str, str] | None = None,
         tags: dict[str, str] | None = None,
+        register: bool = False,
+        version_tags: dict[str, str] | None = None,
     ) -> str:
         with mlflow.start_run(run_name=run_name) as run:
             self._log_common(metrics, params, dataset_info, tags)
-            mlflow.sklearn.log_model(model, artifact_path="model")
+            mlflow.sklearn.log_model(
+                model,
+                artifact_path=run_name,
+                registered_model_name=run_name if register else None,
+            )
             run_id = run.info.run_id
-        logger.info("Logged sklearn run '%s' (run_id=%s)", run_name, run_id)
+        if register and version_tags:
+            self._tag_registered_version(run_name, run_id, version_tags)
+        logger.info("Logged sklearn run '%s' (run_id=%s, registered=%s)", run_name, run_id, register)
         return run_id
 
     def log_pytorch_run(
@@ -55,20 +64,41 @@ class MLflowService:
         train_losses: list[float] | None = None,
         dataset_info: dict[str, str] | None = None,
         tags: dict[str, str] | None = None,
+        register: bool = False,
+        version_tags: dict[str, str] | None = None,
     ) -> str:
         with mlflow.start_run(run_name=run_name) as run:
             self._log_common(metrics, params, dataset_info, tags)
             if train_losses:
                 for step, loss in enumerate(train_losses, start=1):
                     mlflow.log_metric("train_loss", loss, step=step)
-            mlflow.pytorch.log_model(model, artifact_path="model")
+            mlflow.pytorch.log_model(
+                model,
+                artifact_path=run_name,
+                registered_model_name=run_name if register else None,
+            )
             run_id = run.info.run_id
-        logger.info("Logged PyTorch run '%s' (run_id=%s)", run_name, run_id)
+        if register and version_tags:
+            self._tag_registered_version(run_name, run_id, version_tags)
+        logger.info("Logged PyTorch run '%s' (run_id=%s, registered=%s)", run_name, run_id, register)
         return run_id
 
     # ------------------------------------------------------------------
     # Internal
     # ------------------------------------------------------------------
+
+    def _tag_registered_version(
+        self, model_name: str, run_id: str, version_tags: dict[str, str]
+    ) -> None:
+        client = MlflowClient()
+        versions = client.search_model_versions(f"run_id='{run_id}' and name='{model_name}'")
+        if not versions:
+            logger.warning("No registered version found for run_id=%s model=%s", run_id, model_name)
+            return
+        version = versions[0].version
+        for key, value in version_tags.items():
+            client.set_model_version_tag(model_name, version, key, str(value))
+        logger.info("Tagged version %s of '%s': %s", version, model_name, version_tags)
 
     def _log_common(
         self,
