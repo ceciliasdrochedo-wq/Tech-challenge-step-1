@@ -1,12 +1,13 @@
 [project]
 name = "tech-challenge"
 version = "0.1.0"
-description = "Telco Customer Churn Prediction — MLP PyTorch End-to-End Pipeline"
+description = "Projeto de Machine Learning de previsão de churn para o Tech Challenge"
 readme = "README.md"
 authors = [
     {name = "Patrick-Covre",    email = "p.covredev@gmail.com"},
     {name = "Beatriz-Ferrante", email = "beatriz.ferrante37@gmail.com"},
     {name = "Cecilia-Rocha",    email = "ceciliasdrochedo@gmail.com"},
+    {name = "Jose-Daniel",    email = "dni.lacerda@yahoo.com.br"},
 ]
 requires-python = ">=3.10"
 dependencies = [
