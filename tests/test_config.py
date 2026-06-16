@@ -1,6 +1,8 @@
 import logging
 from pathlib import Path
-from src.config import DataConfig, MLPConfig, MLflowConfig, setup_logging
+
+from src.config import DataConfig, MLflowConfig, MLPConfig, setup_logging
+
 
 def test_data_config_defaults():
     config = DataConfig()
@@ -9,6 +11,7 @@ def test_data_config_defaults():
     assert config.random_state == 42
     assert isinstance(config.path, Path)
     assert config.path.name == "churn.csv"
+
 
 def test_mlp_config_defaults():
     config = MLPConfig()
@@ -21,10 +24,12 @@ def test_mlp_config_defaults():
     assert config.early_stopping_patience == 10
     assert config.random_state == 42
 
+
 def test_mlflow_config_defaults():
     config = MLflowConfig()
     assert config.tracking_uri == "sqlite:///mlruns.db"
     assert config.experiment_name == "telco-churn-etapa2"
+
 
 def test_setup_logging():
     setup_logging(level="DEBUG")

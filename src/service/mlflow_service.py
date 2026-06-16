@@ -57,10 +57,16 @@ class MLflowService:
             run_id = run.info.run_id
         if register:
             self._configure_registered_version(
-                run_name, run_id,
-                model_description, version_tags, version_description, version_alias,
+                run_name,
+                run_id,
+                model_description,
+                version_tags,
+                version_description,
+                version_alias,
             )
-        logger.info("Logged sklearn run '%s' (run_id=%s, registered=%s)", run_name, run_id, register)
+        logger.info(
+            "Logged sklearn run '%s' (run_id=%s, registered=%s)", run_name, run_id, register
+        )
         return run_id
 
     def log_pytorch_run(
@@ -91,10 +97,16 @@ class MLflowService:
             run_id = run.info.run_id
         if register:
             self._configure_registered_version(
-                run_name, run_id,
-                model_description, version_tags, version_description, version_alias,
+                run_name,
+                run_id,
+                model_description,
+                version_tags,
+                version_description,
+                version_alias,
             )
-        logger.info("Logged PyTorch run '%s' (run_id=%s, registered=%s)", run_name, run_id, register)
+        logger.info(
+            "Logged PyTorch run '%s' (run_id=%s, registered=%s)", run_name, run_id, register
+        )
         return run_id
 
     # ------------------------------------------------------------------
@@ -133,7 +145,10 @@ class MLflowService:
 
         logger.info(
             "Configured version %s of '%s' — alias=%s tags=%s",
-            version, model_name, version_alias, version_tags,
+            version,
+            model_name,
+            version_alias,
+            version_tags,
         )
 
     def _log_common(
