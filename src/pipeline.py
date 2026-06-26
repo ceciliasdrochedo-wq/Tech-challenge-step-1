@@ -95,11 +95,14 @@ class ChurnPipeline:
 
         # ── PyTorch MLP ─────────────────────────────────────────────────
         if self.run_pytorch_mlp:
+
             def _epoch_cb(epoch: int, train_loss: float, val_loss: float) -> None:
                 if epoch % 10 == 0:
                     logger.info(
                         "Epoch %3d | train_loss=%.4f | val_loss=%.4f",
-                        epoch, train_loss, val_loss,
+                        epoch,
+                        train_loss,
+                        val_loss,
                     )
 
             model_pt, metrics_pt, train_losses = self.pytorch_trainer.fit_evaluate(

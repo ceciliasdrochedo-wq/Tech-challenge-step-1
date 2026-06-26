@@ -95,7 +95,9 @@ class PyTorchMLPTrainer:
 
         model = ChurnMLP(X_fit.shape[1], self.hidden_sizes, self.dropout_rates).to(self.device)
         criterion = nn.BCEWithLogitsLoss()
-        optimizer = optim.Adam(model.parameters(), lr=self.learning_rate, weight_decay=self.weight_decay)
+        optimizer = optim.Adam(
+            model.parameters(), lr=self.learning_rate, weight_decay=self.weight_decay
+        )
         scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=15, gamma=0.5)
         stopper = EarlyStopping(patience=self.early_stopping_patience)
 

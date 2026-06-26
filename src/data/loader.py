@@ -60,9 +60,7 @@ class ChurnDataLoader:
         logger.info("Clean shape: %s | churn rate: %.1f%%", df.shape, df[self.target].mean() * 100)
         return df
 
-    def get_splits(
-        self, df: pd.DataFrame
-    ) -> tuple:
+    def get_splits(self, df: pd.DataFrame) -> tuple:
         """Return (X_train, X_test, y_train, y_test, preprocessor).
 
         Preprocessor is a fitted ColumnTransformer (StandardScaler + OHE).
